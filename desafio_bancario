@@ -1,0 +1,76 @@
+menu = """
+[d] Depositar
+[s] Sacar
+[e] Extrato
+[q] Sair
+=> """
+
+saldo = 0
+limite = 500
+extrato = ""
+numero_saques = 0
+LIMITES_SAQUES = 3
+
+def depositar(valor):
+    global saldo, extrato
+    if valor > 0:
+        saldo += valor
+        extrato += f"Depósito: R${valor:.2f}\n"
+        print(f"Você depositou R${valor:.2f}.")
+    else:
+        print("Valor de depósito inválido. O valor deve ser positivo.")
+
+def sacar(valor):
+    global saldo, extrato, numero_saques
+    if valor <= 0:
+        print("Valor de saque inválido. O valor deve ser positivo.")
+        return
+    if numero_saques >= LIMITES_SAQUES:
+        print("Limite de saques diários atingido.")
+        return
+    if valor > limite:
+        print("Valor de saque excede o limite permitido de R$500,00.")
+        return
+    if valor > saldo:
+        print("Saldo insuficiente.")
+        return
+    saldo -= valor
+    extrato += f"Saque: R${valor:.2f}\n"
+    numero_saques += 1
+    print(f"Você sacou R${valor:.2f}.")
+
+def exibir_extrato():
+    global saldo, extrato
+    if not extrato:
+        print("Não foram realizadas operações.")
+    else:
+        print("Extrato:")
+        print(extrato)
+    print(f"Saldo atual: R${saldo:.2f}")
+
+while True:
+    opcao = input(menu).strip().lower()
+    
+    if opcao == "d":
+        try:
+            valor = float(input("Digite o valor do depósito: R$"))
+            depositar(valor)
+        except ValueError:
+            print("Valor inválido. Por favor, insira um número.")
+        
+    elif opcao == "s":
+        try:
+            valor = float(input("Digite o valor do saque: R$"))
+            sacar(valor)
+        except ValueError:
+            print("Valor inválido. Por favor, insira um número.")
+        
+    elif opcao == "e":
+        exibir_extrato()
+        
+    elif opcao == "q":
+        print("Saindo...")
+        break
+    
+    else:
+        print("Operação inválida, por favor selecione novamente a operação desejada.")
